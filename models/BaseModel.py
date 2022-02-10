@@ -51,18 +51,24 @@ class BaseModel:
 
             # Make an instance of each record in the file
             for row in reader_obj:
-                # Create a new object instance of the model
-                obj = copy(self)
-
-                # Loop through all the record values
-                for index, value in enumerate(row):
-                    # find the corresponding class property for this value
-                    obj_property = self.storable[index]
-
-                    # Assign the value to the property it belongs too
-                    setattr(obj, obj_property, value)
-
-                # Add the fully instantiated object to the records list
-                records.append(obj)
+                records.append( self.__singleton(row) )
 
         return records
+
+
+    def __singleton(self, data):
+        """
+            Create a single instance from given data
+        """
+        # Create a new object instance of the model
+        obj = copy(self)
+
+        # Loop through all the record values
+        for index, value in enumerate(data):
+            # find the corresponding class property for this value
+            obj_property = self.storable[index]
+
+            # Assign the value to the property it belongs too
+            setattr(obj, obj_property, value)
+
+        return obj
